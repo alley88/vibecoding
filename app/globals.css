@@ -1,0 +1,64 @@
+:root {
+  color-scheme: light;
+  --bg: #f4f7ff;
+  --text: #0f172a;
+  --muted: #475569;
+  --primary: #2563eb;
+  --card: #ffffff;
+  --border: #dbeafe;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  color: var(--text);
+  background: radial-gradient(circle at top right, #dbeafe 0, #f8fbff 45%, #eef2ff 100%);
+}
+
+.wrapper { width: min(1120px, 92vw); margin: 0 auto; }
+.header {
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.brand { font-weight: 800; }
+nav { display: flex; gap: 1rem; }
+nav a { text-decoration: none; color: var(--muted); font-size: .95rem; }
+
+.hero { text-align: center; padding: 56px 0 24px; }
+.badge {
+  display: inline-block;
+  padding: .4rem .8rem;
+  background: #dbeafe;
+  border-radius: 999px;
+  color: #1e40af;
+  font-weight: 700;
+}
+h1 { font-size: clamp(2rem, 5vw, 3.3rem); margin: .9rem 0; }
+.sub { color: var(--muted); line-height: 1.7; max-width: 800px; margin: 0 auto; }
+.actions { margin-top: 1.2rem; display: grid; gap: .6rem; justify-items: center; }
+button {
+  border: none;
+  border-radius: 12px;
+  background: var(--primary);
+  color: white;
+  padding: .75rem 1.1rem;
+  cursor: pointer;
+}
+.ghost { background: white; color: var(--primary); border: 1px solid var(--border); }
+
+.stats { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); margin-top: 24px; }
+.card, .feature, .plan {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1rem;
+  box-shadow: 0 10px 30px #1d4ed810;
+}
+.features, .pricing { padding: 48px 0 24px; }
+.feature-grid, .plans { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+.price { font-size: 1.35rem; font-weight: 700; margin: .3rem 0; }
+ul { margin: 0; padding-left: 0; list-style: none; display: grid; gap: .35rem; color: var(--muted); }
+.footer { padding: 24px 0 46px; text-align: center; color: var(--muted); }
