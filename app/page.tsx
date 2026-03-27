@@ -1,84 +1,124 @@
-const plans = [
-  { name: 'PAYGO', price: '按量付费', perks: ['充值金额等价人民币额度', '按实际使用付费', '标准价格', '永不过期'] },
-  { name: 'PRO', price: '¥259', perks: ['立即获得￥305额度', '约 8.5 折', '额度有效期 30 天', '基本速率支持'] },
-  { name: 'MAX', price: '¥559', perks: ['立即获得￥699额度', '约 8 折', '额度有效期 30 天', '高级速率支持'] },
-  { name: 'ULTRA', price: '¥1259', perks: ['立即获得￥1678额度', '约 7.5 折', '额度有效期 30 天', '最高速率支持'] },
-];
-
-const stats = [
-  { value: '10000+', label: '订阅用户' },
-  { value: '200+', label: '知名企业/高校选择' },
-  { value: '280天+', label: '稳定提供服务' },
-];
+import Link from 'next/link';
+import PricingCard from '@/components/PricingCard';
+import { STATS, PLANS, PRODUCTS, PLATFORMS, CLAUDE_MODELS, ENTERPRISE_LOGOS } from '@/lib/constants';
 
 export default function Home() {
   return (
     <main>
-      <header className="header wrapper">
-        <div className="brand">AICodeMirror</div>
-        <nav>
-          <a href="#">首页</a>
-          <a href="#pricing">定价</a>
-          <a href="#">使用教程</a>
-          <a href="#">关于我们</a>
-        </nav>
-        <button className="ghost">登录</button>
-      </header>
-
-      <section className="hero wrapper">
-        <p className="badge">企业级 GPT-5.4</p>
+      {/* ── 1. Hero ── */}
+      <section className="hero container">
+        <p className="badge">企业级 Claude Code 服务</p>
         <h1>一站式 Vibe Coding</h1>
         <p className="sub">
           无需编程基础，仅依靠自然语言，就能将您的想法变为现实。稳定、安全、优惠地使用 Claude Code、Codex 与 Gemini CLI。
         </p>
         <div className="actions">
-          <button>免费使用</button>
-          <span>加入 AI 社群领取 8 元永久额度</span>
+          <Link href="/register" className="btn-primary">免费使用</Link>
+          <span style={{ color: 'var(--muted)' }}>加入 AI 社群领取 8 元永久额度</span>
         </div>
       </section>
 
-      <section className="stats wrapper">
-        {stats.map((item) => (
-          <div key={item.label} className="card">
-            <h3>{item.value}</h3>
-            <p>{item.label}</p>
-          </div>
-        ))}
+      {/* ── 2. Stats ── */}
+      <section className="section container">
+        <div className="stats-grid">
+          {STATS.map((item) => (
+            <div key={item.label} className="stat-card">
+              <h3>{item.value}</h3>
+              <p>{item.label}</p>
+            </div>
+          ))}
+        </div>
       </section>
 
-      <section className="features wrapper">
-        <h2>同时支持 Claude Code / Codex / Gemini CLI</h2>
+      {/* ── 3. Product Support ── */}
+      <section className="section container">
+        <h2 className="section-title">同时支持多款 AI 编程工具</h2>
+        <div className="product-grid">
+          {PRODUCTS.map((p) => (
+            <div key={p.name} className="product-card">
+              <h3>{p.name}</h3>
+              <p>{p.desc}</p>
+            </div>
+          ))}
+        </div>
+        <div className="platform-btns">
+          {PLATFORMS.map((p) => (
+            <span key={p} className="chip">{p}</span>
+          ))}
+        </div>
+      </section>
+
+      {/* ── 4. Features ── */}
+      <section className="section container">
+        <h2 className="section-title">为什么选择 AICodeMirror</h2>
         <div className="feature-grid">
-          {['稳定可靠', '产品多元', '报销合规'].map((item) => (
-            <article key={item} className="feature">
-              <h3>{item}</h3>
-              <p>多网络节点与容灾备份，透明定价并支持企业采购流程。</p>
-            </article>
+          <article className="feature-card">
+            <h3>稳定可靠</h3>
+            <p>多网络节点与容灾备份，全球加速确保低延迟连接，99.9% 可用性保障。</p>
+          </article>
+          <article className="feature-card">
+            <h3>产品多元</h3>
+            <p>同一账号管理 Claude Code、Codex、Gemini CLI，统一计费，按需切换。</p>
+          </article>
+          <article className="feature-card">
+            <h3>报销合规</h3>
+            <p>透明定价，支持支付宝支付，提供正规发票，适配企业采购流程。</p>
+          </article>
+        </div>
+      </section>
+
+      {/* ── 5. Claude Model Lineup ── */}
+      <section className="section container">
+        <h2 className="section-title">Claude 模型系列</h2>
+        <div className="model-grid">
+          {CLAUDE_MODELS.map((m) => (
+            <div key={m.name} className="model-card">
+              <div className="tier">{m.tier}</div>
+              <h3>Claude {m.name}</h3>
+              <p>{m.desc}</p>
+              <div className="model-meta">
+                <div>速度 <span>{m.speed}</span></div>
+                <div>成本 <span>{m.cost}</span></div>
+              </div>
+            </div>
           ))}
         </div>
       </section>
 
-      <section id="pricing" className="pricing wrapper">
-        <h2>选择您的订阅计划</h2>
-        <div className="plans">
-          {plans.map((plan) => (
-            <article key={plan.name} className="plan">
-              <h3>{plan.name}</h3>
-              <p className="price">{plan.price}</p>
-              <ul>
-                {plan.perks.map((perk) => (
-                  <li key={perk}>✓ {perk}</li>
-                ))}
-              </ul>
-              <button>选择 {plan.name}</button>
-            </article>
+      {/* ── 6. IDE Integration ── */}
+      <section className="section container">
+        <h2 className="section-title">IDE 集成支持</h2>
+        <div className="ide-grid">
+          <div className="ide-card">
+            <h3>VS Code</h3>
+            <p>通过 Continue、Cline 等扩展，在 VS Code 中直接使用 Claude 编程助手，享受智能补全与代码生成。</p>
+          </div>
+          <div className="ide-card">
+            <h3>JetBrains</h3>
+            <p>支持 IntelliJ IDEA、WebStorm、PyCharm 等全系列 JetBrains IDE，无缝集成 AI 编程能力。</p>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 7. Pricing ── */}
+      <section id="pricing" className="section container">
+        <h2 className="section-title">选择您的订阅计划</h2>
+        <div className="pricing-grid">
+          {PLANS.map((plan) => (
+            <PricingCard key={plan.name} plan={plan} />
           ))}
         </div>
       </section>
 
-      <footer className="footer wrapper">
-        <p>© 2025 AICodeMirror共享平台. 保留所有权利.</p>
-      </footer>
+      {/* ── 8. Enterprise Trust ── */}
+      <section className="section container">
+        <h2 className="section-title">受到知名企业信赖</h2>
+        <div className="logo-wall">
+          {ENTERPRISE_LOGOS.map((name) => (
+            <div key={name} className="logo-item">{name}</div>
+          ))}
+        </div>
+      </section>
     </main>
   );
 }
