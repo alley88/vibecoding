@@ -1,23 +1,31 @@
 'use client';
 
-import { useState } from 'react';
-import { MOCK_USAGE_LOGS } from '@/lib/console-mock-data';
+import { useState, useEffect } from 'react';
+import { usageService, UsageLog, UsageStats } from '@/lib/services/usage';
 
 const MODELS = ['全部', 'Claude Opus', 'Claude Sonnet', 'Claude Haiku', 'Codex', 'Gemini Pro'];
 
 export default function UsagePage() {
   const [filter, setFilter] = useState('全部');
+  const [logs, setLogs] = useState<UsageLog[]>([]);
+  const [stats, setStats] = useState<UsageStats | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const filtered = filter === '全部'
-    ? MOCK_USAGE_LOGS
-    : MOCK_USAGE_LOGS.filter((l) => l.model === filter);
+  useEffect(() => {
+    setLoading(true);
+    Promise.all([
+      usageService.list({ model: filter !== '全部' ? filter : undefined }).catch(() => []),
+      usageService.stats().catch(() => null),
+    ]).then(([logsData, statsData]) => {
+      setLogs(logsData || []);
+      setStats(statsData);
+      setLoading(false);
+    });
+  }, [filter]);
 
-  const totalTokens = filtered.reduce((s, l) => s + l.tokens, 0);
-  const totalCost = filtered.reduce((s, l) => s + l.cost, 0);
-
-  const modelCounts: Record<string, number> = {};
-  filtered.forEach((l) => { modelCounts[l.model] = (modelCounts[l.model] || 0) + l.tokens; });
-  const topModel = Object.entries(modelCounts).sort((a, b) => b[1] - a[1])[0]?.[0] ?? '—';
+  const totalTokens = stats?.total_tokens ?? logs.reduce((s, l) => s + l.tokens, 0);
+  const totalCost = stats?.total_cost ?? logs.reduce((s, l) => s + l.cost, 0);
+  const topModel = stats?.top_model ?? '—';
 
   return (
     <>
@@ -25,7 +33,6 @@ export default function UsagePage() {
         <h1 className="console-page-title">用量明细</h1>
       </div>
 
-      {/* Summary */}
       <div className="console-stats-grid" style={{ marginBottom: '1.5rem' }}>
         <div className="console-card">
           <p className="console-card-label">总 Tokens</p>
@@ -41,7 +48,6 @@ export default function UsagePage() {
         </div>
       </div>
 
-      {/* Filter */}
       <div className="switcher" style={{ justifyContent: 'flex-start', marginBottom: '1rem' }}>
         {MODELS.map((m) => (
           <button
@@ -54,30 +60,36 @@ export default function UsagePage() {
         ))}
       </div>
 
-      {/* Table */}
       <div className="console-card">
-        <table className="console-table">
-          <thead>
-            <tr>
-              <th>日期</th>
-              <th>模型</th>
-              <th>Tokens</th>
-              <th>费用 (¥)</th>
-              <th>类型</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filtered.map((l) => (
-              <tr key={l.id}>
-                <td>{l.date}</td>
-                <td>{l.model}</td>
-                <td>{l.tokens.toLocaleString()}</td>
-                <td>¥{l.cost.toFixed(2)}</td>
-                <td><span className="badge" style={{ fontSize: '0.78rem' }}>{l.type}</span></td>
+        {loading ? (
+          <p style={{ textAlign: 'center', color: 'var(--muted)', padding: '2rem' }}>加载中...</p>
+        ) : (
+          <table className="console-table">
+            <thead>
+              <tr>
+                <th>日期</th>
+                <th>模型</th>
+                <th>Tokens</th>
+                <th>费用 (¥)</th>
+                <th>类型</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {logs.map((l) => (
+                <tr key={l.id}>
+                  <td>{l.date}</td>
+                  <td>{l.model}</td>
+                  <td>{l.tokens.toLocaleString()}</td>
+                  <td>¥{l.cost.toFixed(2)}</td>
+                  <td><span className="badge" style={{ fontSize: '0.78rem' }}>{l.type}</span></td>
+                </tr>
+              ))}
+              {logs.length === 0 && (
+                <tr><td colSpan={5} style={{ textAlign: 'center', color: 'var(--muted)' }}>暂无记录</td></tr>
+              )}
+            </tbody>
+          </table>
+        )}
       </div>
     </>
   );

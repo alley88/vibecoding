@@ -3,8 +3,9 @@
 import { usePathname } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { AuthProvider } from '@/contexts/AuthContext';
 
-export default function LayoutShell({ children }: { children: React.ReactNode }) {
+function LayoutInner({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isConsole = pathname.startsWith('/console');
 
@@ -18,5 +19,13 @@ export default function LayoutShell({ children }: { children: React.ReactNode })
       {children}
       <Footer />
     </>
+  );
+}
+
+export default function LayoutShell({ children }: { children: React.ReactNode }) {
+  return (
+    <AuthProvider>
+      <LayoutInner>{children}</LayoutInner>
+    </AuthProvider>
   );
 }

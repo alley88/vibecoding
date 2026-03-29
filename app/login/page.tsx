@@ -1,44 +1,60 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useAuth } from '@/contexts/AuthContext';
+import { ApiError } from '@/lib/api';
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('zhangsan@example.com');
-  const [password, setPassword] = useState('test123456');
+  const { login, isAuthenticated } = useAuth();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = () => {
-    if (email === 'zhangsan@example.com' && password === 'test123456') {
+  useEffect(() => {
+    if (isAuthenticated) router.replace('/console');
+  }, [isAuthenticated, router]);
+
+  const handleLogin = async () => {
+    if (!username || !password) {
+      setError('请输入用户名和密码');
+      return;
+    }
+    setLoading(true);
+    setError('');
+    try {
+      await login({ username, password });
       router.push('/console');
-    } else {
-      setError('邮箱或密码错误，请使用测试账号登录');
+    } catch (e) {
+      setError(e instanceof ApiError ? e.message : '登录失败，请稍后重试');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <main className="auth-page">
-      <div className="auth-card">
+      <form className="auth-card" onSubmit={(e) => { e.preventDefault(); handleLogin(); }}>
         <h1>登录</h1>
-        <p style={{ textAlign: 'center', color: 'var(--muted)', fontSize: '0.85rem', marginBottom: '1rem' }}>
-          测试账号已预填，直接点击登录即可
-        </p>
         {error && <p style={{ color: '#ff6b6b', textAlign: 'center', marginBottom: '1rem', fontSize: '0.9rem' }}>{error}</p>}
         <div className="form-group">
-          <label htmlFor="email">邮箱</label>
-          <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <label htmlFor="username">用户名</label>
+          <input id="username" type="text" placeholder="请输入用户名" value={username} onChange={(e) => setUsername(e.target.value)} />
         </div>
         <div className="form-group">
           <label htmlFor="password">密码</label>
-          <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <input id="password" type="password" placeholder="请输入密码" value={password} onChange={(e) => setPassword(e.target.value)} />
         </div>
-        <button className="btn-primary" onClick={handleLogin}>登录</button>
+        <button className="btn-primary" type="submit" disabled={loading}>
+          {loading ? '登录中...' : '登录'}
+        </button>
         <p className="auth-footer">
           还没有账号？<Link href="/register">立即注册</Link>
         </p>
-      </div>
+      </form>
     </main>
   );
 }
