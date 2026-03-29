@@ -1,0 +1,8 @@
+.git
+node_modules
+.next
+.env*.local
+*.log
+README.md
+DASHBOARD_ANALYSIS.md
+IMPLEMENTATION_PLAN.md

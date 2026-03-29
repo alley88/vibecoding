@@ -28,7 +28,7 @@ export default function Footer() {
           <p>安全合规</p>
         </div>
       </div>
-      <p className="copyright">© 2025 AICodeMirror共享平台. 保留所有权利. 毛绒盒子(北京)科技有限公司</p>
+      <p className="copyright">© 2025 AICodeMirror共享平台. 保留所有权利. 华峥科技有限公司</p>
     </footer>
   );
 }

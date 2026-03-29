@@ -46,7 +46,7 @@ export default function AboutPage() {
         <div className="prose">
           <h2>我们是谁</h2>
           <p>
-            AICodeMirror 是由毛绒盒子(北京)科技有限公司运营的 AI 编程工具共享服务平台。
+            AICodeMirror 是由华峥科技有限公司运营的 AI 编程工具共享服务平台。
             我们通过官方 API 通道，为中国用户提供稳定、合规、优惠的 Claude Code、Codex 和 Gemini CLI 使用服务。
           </p>
           <p>
@@ -85,7 +85,7 @@ export default function AboutPage() {
       {/* Company Info */}
       <section className="section container" style={{ textAlign: 'center' }}>
         <p style={{ color: 'var(--muted)', marginBottom: '1.5rem' }}>
-          公司主体：毛绒盒子(北京)科技有限公司
+          公司主体：华峥科技有限公司
         </p>
         <div className="actions">
           <Link href="/register" className="btn-primary">成为推广大使</Link>
