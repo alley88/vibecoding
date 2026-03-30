@@ -1,4 +1,4 @@
-FROM registry.cn-hangzhou.aliyuncs.com/library/node:22-alpine AS base
+FROM registry.cn-hangzhou.aliyuncs.com/dockerhub-official/node:22-alpine AS base
 
 WORKDIR /app
 
